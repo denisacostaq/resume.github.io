@@ -26,19 +26,22 @@ add_custom_target(pdf ALL
     BYPRODUCTS ${CMAKE_CURRENT_BINARY_DIR}/resume.pdf
     COMMENT "Generating pdf file"
     SOURCES ${CMAKE_CURRENT_BINARY_DIR}/resume.tex)
-set(CMAKE_VERBOSE_MAKEFILE ON)
 add_custom_target(html
     COMMAND ${PANDOC_EXE} --include-in-header ${CMAKE_CURRENT_SOURCE_DIR}/src/style.css --standalone --from markdown --to html --output ${CMAKE_CURRENT_BINARY_DIR}/resume.html ${CMAKE_CURRENT_SOURCE_DIR}/src/README.md
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/src/README.md ${CMAKE_CURRENT_SOURCE_DIR}/src/style.css
     BYPRODUCTS ${CMAKE_CURRENT_BINARY_DIR}/resume.html
     COMMENT "Generating html file"
     SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/README.md)
+set(CMAKE_VERBOSE_MAKEFILE ON)
+add_custom_target(doc
+    COMMAND ${PANDOC_EXE} --standalone --from markdown --to docx --output ${CMAKE_CURRENT_BINARY_DIR}/resume.docx ${CMAKE_CURRENT_SOURCE_DIR}/src/README.md
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/src/README.md ${CMAKE_CURRENT_SOURCE_DIR}/src/style.css
+    BYPRODUCTS ${CMAKE_CURRENT_BINARY_DIR}/resume.docx
+    COMMENT "Generating docx file"
+    SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/README.md)
 add_custom_target(txt
     COMMAND ${PANDOC_EXE} --standalone --from markdown --to plain+smart --output ${CMAKE_CURRENT_BINARY_DIR}/resume.txt ${CMAKE_CURRENT_SOURCE_DIR}/src/README.md
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/src/README.md ${CMAKE_CURRENT_SOURCE_DIR}/src/style.css
     BYPRODUCTS ${CMAKE_CURRENT_BINARY_DIR}/resume.txt
-    COMMENT "Generating html file"
+    COMMENT "Generating txt file"
     SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/README.md)
-
-#pandoc --standalone --template $(STYLES_DIR)/$(STYLE).tex  --from markdown --to context --variable papersize=A4 --output $(OUT_DIR)/$$FILE_NAME.tex $$f > /dev/null;
-#mtxrun --path=$(OUT_DIR) --result=$$FILE_NAME.pdf --script context $$FILE_NAME.tex > $(OUT_DIR)/context_$$FILE_NAME.log 2>&1; \

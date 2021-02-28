@@ -12,7 +12,7 @@ if(NOT MTXRUN_EXE)
 endif()
 
 add_custom_target(context
-    COMMAND ${PANDOC_EXE} --standalone --from markdown --to context --variable papersize=A4 --output ${CMAKE_CURRENT_BINARY_DIR}/resume.tex ${CMAKE_CURRENT_SOURCE_DIR}/src/README.md
+    COMMAND ${PANDOC_EXE} --standalone --template ${CMAKE_CURRENT_SOURCE_DIR}/src/chmduquesne.tex --from markdown --to context --variable papersize=A4 --output ${CMAKE_CURRENT_BINARY_DIR}/resume.tex ${CMAKE_CURRENT_SOURCE_DIR}/src/README.md
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/src/README.md
     BYPRODUCTS ${CMAKE_CURRENT_BINARY_DIR}/resume.tex
     COMMENT "Generating ConTeXt file"
@@ -28,7 +28,7 @@ add_custom_target(pdf ALL
     SOURCES ${CMAKE_CURRENT_BINARY_DIR}/resume.tex)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 add_custom_target(html
-    COMMAND ${PANDOC_EXE} -c ${CMAKE_CURRENT_SOURCE_DIR}/src/style.css --standalone --from markdown --to html --output ${CMAKE_CURRENT_BINARY_DIR}/resume.html ${CMAKE_CURRENT_SOURCE_DIR}/src/README.md
+    COMMAND ${PANDOC_EXE} --include-in-header ${CMAKE_CURRENT_SOURCE_DIR}/src/style.css --standalone --from markdown --to html --output ${CMAKE_CURRENT_BINARY_DIR}/resume.html ${CMAKE_CURRENT_SOURCE_DIR}/src/README.md
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/src/README.md ${CMAKE_CURRENT_SOURCE_DIR}/src/style.css
     BYPRODUCTS ${CMAKE_CURRENT_BINARY_DIR}/resume.html
     COMMENT "Generating html file"
@@ -40,3 +40,5 @@ add_custom_target(txt
     COMMENT "Generating html file"
     SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/README.md)
 
+#pandoc --standalone --template $(STYLES_DIR)/$(STYLE).tex  --from markdown --to context --variable papersize=A4 --output $(OUT_DIR)/$$FILE_NAME.tex $$f > /dev/null;
+#mtxrun --path=$(OUT_DIR) --result=$$FILE_NAME.pdf --script context $$FILE_NAME.tex > $(OUT_DIR)/context_$$FILE_NAME.log 2>&1; \

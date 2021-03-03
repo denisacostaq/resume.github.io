@@ -32,7 +32,6 @@ add_custom_target(html
     BYPRODUCTS ${CMAKE_CURRENT_BINARY_DIR}/resume.html
     COMMENT "Generating html file"
     SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/README.md)
-set(CMAKE_VERBOSE_MAKEFILE ON)
 add_custom_target(doc
     COMMAND ${PANDOC_EXE} --standalone --from markdown --to docx --output ${CMAKE_CURRENT_BINARY_DIR}/resume.docx ${CMAKE_CURRENT_SOURCE_DIR}/src/README.md
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/src/README.md ${CMAKE_CURRENT_SOURCE_DIR}/src/style.css

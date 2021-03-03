@@ -25,10 +25,12 @@ add_custom_target(pdf ALL
     BYPRODUCTS ${CMAKE_CURRENT_BINARY_DIR}/resume.pdf
     COMMENT "Generating pdf file"
     SOURCES ${CMAKE_CURRENT_BINARY_DIR}/resume.tex)
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/www)
 add_custom_target(html
-    COMMAND ${PANDOC_EXE} --include-in-header ${CMAKE_CURRENT_SOURCE_DIR}/src/style.css --standalone --from markdown --to html --output ${CMAKE_CURRENT_BINARY_DIR}/resume.html ${CMAKE_CURRENT_SOURCE_DIR}/src/README.md
+    COMMAND 
+    COMMAND ${PANDOC_EXE} --include-in-header ${CMAKE_CURRENT_SOURCE_DIR}/src/style.css --standalone --from markdown --to html --output ${CMAKE_CURRENT_BINARY_DIR}/www/index.html ${CMAKE_CURRENT_SOURCE_DIR}/src/README.md
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/src/README.md ${CMAKE_CURRENT_SOURCE_DIR}/src/style.css
-    BYPRODUCTS ${CMAKE_CURRENT_BINARY_DIR}/resume.html
+    BYPRODUCTS ${CMAKE_CURRENT_BINARY_DIR}/www/index.html
     COMMENT "Generating html file"
     SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/README.md)
 add_custom_target(doc

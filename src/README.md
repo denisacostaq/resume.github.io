@@ -91,3 +91,5 @@ Extra Section, Call it Whatever You Want
 * Random tidbit
 
 * Other sort of impressive-sounding thing you did
+
+[last](https://github.com/denisacostaq/resume.github.io/releases/latest)

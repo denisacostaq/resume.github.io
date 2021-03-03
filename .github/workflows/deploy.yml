@@ -4,11 +4,9 @@ name: Deploy cv
 
 # Controls when the action will run. 
 on:
-  # Triggers the workflow on push or pull request events but only for the develop branch
   push:
-    branches: [ develop ]
-  pull_request:
-    branches: [ develop ]
+    tags:
+    - '*'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -45,7 +43,7 @@ jobs:
       - name: Build docs
         shell: bash
         working-directory: ${{env.working-directory}}/build
-        run: make
+        run: make pdf doc txt html
 
       - name: Cache
         uses: actions/cache@v2.1.4
@@ -58,6 +56,8 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    env:
+      working-directory: .
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
@@ -70,5 +70,53 @@ jobs:
           # An explicit key for restoring and saving the cache
           key: build-output-${{ hashFiles('.github/workflows/deploy.yml', './CMakeLists.txt', './src/**') }}
 
-      - name: Ls
-        run: find ./
+      - name: Extract tag name
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+
+      - name: Create Draft Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.get_version.outputs.VERSION }}
+          release_name: ${{ github.event.head_commit.message }}
+          draft: true
+          prerelease: false
+
+      - name: Upload pdf
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./build/resume.pdf
+          asset_name: resume.pdf
+          asset_content_type: application/pdf
+
+      - name: Upload txt
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./build/resume.txt
+          asset_name: resume.txt
+          asset_content_type: text/plain
+
+      - name: Upload doc
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./build/resume.docx
+          asset_name: resume.docx
+          asset_content_type: application/msword
+
+      - uses: eregon/publish-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          release_id: ${{ steps.create_release.outputs.id }}

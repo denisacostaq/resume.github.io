@@ -92,4 +92,6 @@ Extra Section, Call it Whatever You Want
 
 * Other sort of impressive-sounding thing you did
 
-[last](https://github.com/denisacostaq/resume.github.io/releases/latest)
+[last release](https://github.com/denisacostaq/resume/releases/latest)
+
+[onlie version](https://denisacostaq.github.io/resume)

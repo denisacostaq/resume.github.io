@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.10)
 project(Resume VERSION 0.1)
 
 find_program(PANDOC_EXE pandoc)
-message("PANDOC_EXE ${PANDOC_EXE}")
 if(NOT PANDOC_EXE)
     message(FATAL_ERROR "pandoc not found (https://pandoc.org/installing.html)!")
 endif()
@@ -44,3 +43,6 @@ add_custom_target(txt
     BYPRODUCTS ${CMAKE_CURRENT_BINARY_DIR}/resume.txt
     COMMENT "Generating txt file"
     SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/README.md)
+
+#pandoc --standalone --template $(STYLES_DIR)/$(STYLE).tex  --from markdown --to context --variable papersize=A4 --output $(OUT_DIR)/$$FILE_NAME.tex $$f > /dev/null;
+#mtxrun --path=$(OUT_DIR) --result=$$FILE_NAME.pdf --script context $$FILE_NAME.tex > $(OUT_DIR)/context_$$FILE_NAME.log 2>&1; \
